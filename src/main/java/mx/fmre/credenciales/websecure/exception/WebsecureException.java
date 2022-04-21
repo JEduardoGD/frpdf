@@ -1,6 +1,6 @@
 package mx.fmre.credenciales.websecure.exception;
 
-public class WebsecureException extends Throwable {
+public class WebsecureException extends Exception {
 
     /**
      * 

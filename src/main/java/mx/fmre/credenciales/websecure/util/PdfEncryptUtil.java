@@ -8,9 +8,16 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 
+import lombok.extern.slf4j.Slf4j;
 import mx.fmre.credenciales.websecure.exception.WebsecureException;
+import mx.fmre.credenciales.websecure.staticv.StaticValuesUtil;
 
+@Slf4j
 public final class PdfEncryptUtil {
+    private PdfEncryptUtil() {
+        // no call
+    }
+
     public static void removeWrights(File file, String newFilepath) throws WebsecureException {
         PDDocument document = null;
         try {
@@ -28,17 +35,17 @@ public final class PdfEncryptUtil {
             spp.setEncryptionKeyLength(128);
             spp.setPermissions(ap);
             document.protect(spp);
-            System.out.println("PDF Document encrypted Successfully.");
-            System.out.println("CHECK " + file.getPath());
+            log.info("PDF Document encrypted Successfully.");
+            log.info("CHECK {}", file.getPath());
 
             File f = Paths.get(newFilepath).toFile();
             if (f.exists() && f.canWrite()) {
-                if(!f.delete()) {
-                    System.out.println("error");
+                if (!f.delete()) {
+                    log.error(StaticValuesUtil.CANT_DELETE_FILE_MESSAGE);
                 }
             }
             if (f.exists() && !f.canWrite()) {
-                throw new WebsecureException("No es posible borrar el archivo");
+                throw new WebsecureException(StaticValuesUtil.CANT_DELETE_FILE_MESSAGE);
             }
 
             document.save(newFilepath);
@@ -49,7 +56,7 @@ public final class PdfEncryptUtil {
                 try {
                     document.close();
                 } catch (IOException e) {
-                    new WebsecureException(e);
+                    log.error(e.getLocalizedMessage());
                 }
             }
         }

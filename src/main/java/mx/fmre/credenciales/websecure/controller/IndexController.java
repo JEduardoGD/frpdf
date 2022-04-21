@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +24,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import mx.fmre.credenciales.websecure.dto.UploadResult;
 import mx.fmre.credenciales.websecure.service.IPdfSecureService;
+import mx.fmre.credenciales.websecure.staticv.StaticValuesUtil;
 
 @Controller
 @ControllerAdvice
@@ -35,21 +34,20 @@ public class IndexController {
 
     @GetMapping
     public String showUserList(Model model) {
-        // model.addAttribute("users", Arrays.asList(user));
-        return "index";
+        return StaticValuesUtil.INDEX_REDIRECT;
     }
 
-    @PostMapping("/upload")
-    public RedirectView uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes attributes) {
+    @PostMapping(StaticValuesUtil.UPLOAD_FILE_REDIRECT)
+    public RedirectView uploadFile(@RequestParam(StaticValuesUtil.FILE_PARAM) MultipartFile file, RedirectAttributes attributes) {
         UploadResult uploadResult = pdfSecureService.uploadFile(file);
-        attributes.addFlashAttribute("message", uploadResult.getMessage());
-        attributes.addFlashAttribute("hayError", uploadResult.isHayError());
-        attributes.addFlashAttribute("filename", uploadResult.getDownloadFilename());
-        return new RedirectView("/", true);
+        attributes.addFlashAttribute(StaticValuesUtil.MESSAGE_VAR, uploadResult.getMessage());
+        attributes.addFlashAttribute(StaticValuesUtil.HAY_ERROR_VAR, uploadResult.isHayError());
+        attributes.addFlashAttribute(StaticValuesUtil.FILENAME_VAR, uploadResult.getDownloadFilename());
+        return new RedirectView(StaticValuesUtil.HOMES_REDIRECT, true);
     }
 
-    @RequestMapping(value = "/downloadfile", method = RequestMethod.POST)
-    public ResponseEntity<InputStreamResource> downloadFile(@PathParam("filename") String filename)
+    @GetMapping(StaticValuesUtil.DOWNLOAD_FILE_REDIRECT)
+    public ResponseEntity<InputStreamResource> downloadFile(@PathParam(StaticValuesUtil.FILENAME_PARAM) String filename)
             throws FileNotFoundException {
 
         UploadResult uploadResult = pdfSecureService.downloadFile(filename);
@@ -67,8 +65,8 @@ public class IndexController {
     
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxUploadSizeExceededException(RedirectAttributes attributes) {
-        attributes.addFlashAttribute("message", "Max filesize");
-        attributes.addFlashAttribute("hayError", true);
-        return "redirect:/";
+        attributes.addFlashAttribute(StaticValuesUtil.MESSAGE_VAR, StaticValuesUtil.MAX_FILESIZE_MESSAGE);
+        attributes.addFlashAttribute(StaticValuesUtil.HAY_ERROR_VAR, true);
+        return StaticValuesUtil.HOME_REDIRECT;
     }
 }
