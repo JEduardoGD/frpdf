@@ -12,10 +12,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -24,6 +27,7 @@ import mx.fmre.credenciales.websecure.dto.UploadResult;
 import mx.fmre.credenciales.websecure.service.IPdfSecureService;
 
 @Controller
+@ControllerAdvice
 public class IndexController {
     @Autowired
     private IPdfSecureService pdfSecureService;
@@ -58,5 +62,12 @@ public class IndexController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .contentLength(uploadResult.getFile().length())
                 .body(inputStreamResource);
+    }
+    
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public String handleMaxUploadSizeExceededException(RedirectAttributes attributes) {
+        attributes.addFlashAttribute("message", "Max filesize");
+        attributes.addFlashAttribute("hayError", true);
+        return "redirect:/";
     }
 }
