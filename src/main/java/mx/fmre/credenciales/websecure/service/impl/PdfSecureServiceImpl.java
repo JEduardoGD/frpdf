@@ -29,7 +29,7 @@ public class PdfSecureServiceImpl extends FileUploadsValidator implements IPdfSe
     @Value("${UPLOAD_MODIFIED_DIR}")
     private String UPLOAD_MODIFIED_DIR;
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
+    private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
 
     @Override
     public UploadResult uploadFile(MultipartFile file) {

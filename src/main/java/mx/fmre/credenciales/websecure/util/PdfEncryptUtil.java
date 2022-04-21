@@ -25,8 +25,6 @@ public final class PdfEncryptUtil {
             ap.canExtractForAccessibility();
 
             StandardProtectionPolicy spp = new StandardProtectionPolicy("fmre2022", null, ap);
-            // StandardProtectionPolicy spp = new StandardProtectionPolicy("1234",
-            // "fmre2022", ap);
             spp.setEncryptionKeyLength(128);
             spp.setPermissions(ap);
             document.protect(spp);
@@ -35,7 +33,9 @@ public final class PdfEncryptUtil {
 
             File f = Paths.get(newFilepath).toFile();
             if (f.exists() && f.canWrite()) {
-                f.delete();
+                if(!f.delete()) {
+                    System.out.println("error");
+                }
             }
             if (f.exists() && !f.canWrite()) {
                 throw new WebsecureException("No es posible borrar el archivo");
@@ -49,7 +49,7 @@ public final class PdfEncryptUtil {
                 try {
                     document.close();
                 } catch (IOException e) {
-                    throw new WebsecureException(e);
+                    new WebsecureException(e);
                 }
             }
         }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +48,7 @@ public class IndexController {
         return new RedirectView("/", true);
     }
 
-    @RequestMapping("/downloadfile")
+    @RequestMapping(value = "/downloadfile", method = RequestMethod.POST)
     public ResponseEntity<InputStreamResource> downloadFile(@PathParam("filename") String filename)
             throws FileNotFoundException {
 
