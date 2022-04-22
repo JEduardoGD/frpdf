@@ -23,20 +23,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import lombok.extern.slf4j.Slf4j;
 import mx.fmre.credenciales.websecure.dto.UploadResult;
 import mx.fmre.credenciales.websecure.service.IPdfSecureService;
 import mx.fmre.credenciales.websecure.staticv.StaticValuesUtil;
 
 @Controller
 @ControllerAdvice
-@Slf4j
 public class IndexController {
     @Autowired
     private IPdfSecureService pdfSecureService;
-    
-    @Value("${APP_CONTEXT}")
-    private String appContext;
 
     @GetMapping
     public String showUserList(Model model) {
@@ -49,8 +44,7 @@ public class IndexController {
         attributes.addFlashAttribute(StaticValuesUtil.MESSAGE_VAR, uploadResult.getMessage());
         attributes.addFlashAttribute(StaticValuesUtil.HAY_ERROR_VAR, uploadResult.isHayError());
         attributes.addFlashAttribute(StaticValuesUtil.FILENAME_VAR, uploadResult.getDownloadFilename());
-        log.info("redirect to: {}", appContext);
-        return new RedirectView(appContext, true);
+        return new RedirectView(StaticValuesUtil.HOME_REDIRECT, true);
     }
 
     @GetMapping(StaticValuesUtil.DOWNLOAD_FILE_REDIRECT)
