@@ -43,7 +43,7 @@ public class IndexController {
         attributes.addFlashAttribute(StaticValuesUtil.MESSAGE_VAR, uploadResult.getMessage());
         attributes.addFlashAttribute(StaticValuesUtil.HAY_ERROR_VAR, uploadResult.isHayError());
         attributes.addFlashAttribute(StaticValuesUtil.FILENAME_VAR, uploadResult.getDownloadFilename());
-        return new RedirectView(StaticValuesUtil.HOME_REDIRECT, true);
+        return new RedirectView("@{/}", true);
     }
 
     @GetMapping(StaticValuesUtil.DOWNLOAD_FILE_REDIRECT)
