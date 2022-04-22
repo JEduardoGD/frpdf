@@ -13,7 +13,6 @@ public abstract class StaticValuesUtil {
     //redirect values
     public static final String INDEX_REDIRECT = "index";
     public static final String HOME_REDIRECT = "redirect:/";
-    public static final String HOMES_REDIRECT = "/";
     public static final String DOWNLOAD_FILE_REDIRECT = "/downloadfile";
     public static final String UPLOAD_FILE_REDIRECT = "/upload";
     
