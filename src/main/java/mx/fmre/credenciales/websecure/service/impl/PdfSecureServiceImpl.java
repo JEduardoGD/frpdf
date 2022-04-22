@@ -31,11 +31,16 @@ public class PdfSecureServiceImpl extends FileUploadsValidator implements IPdfSe
 
     @Value("${UPLOAD_MODIFIED_DIR}")
     private String uploadModifiedDir;
+    
+    @Value("${PDF_OWNER_PSWD}")
+    private String ownerPswd;
 
     private final DateFormat DATE_FORMAT = new SimpleDateFormat(StaticValuesUtil.UPLOADEDFILE_DATE_FORMAT);
 
     @Override
     public UploadResult uploadFile(MultipartFile file) {
+        log.debug("uploadDir: {}", uploadDir);
+        log.debug("uploadModifiedDir: {}", uploadModifiedDir);
         if (isEmptyFile(file)) {
             return new UploadResult(true, StaticValuesUtil.MUST_SELECT_FILE_MESSAGE);
         }
@@ -57,7 +62,7 @@ public class PdfSecureServiceImpl extends FileUploadsValidator implements IPdfSe
         }
 
         try {
-            PdfEncryptUtil.removeWrights(path.toFile(), uploadModifiedDir + File.separator + fileName);
+            PdfEncryptUtil.removeWrights(path.toFile(), ownerPswd, uploadModifiedDir + File.separator + fileName);
         } catch (WebsecureException e) {
             log.error(e.getLocalizedMessage());
             return new UploadResult(true, String.format(StaticValuesUtil.ERROR_UPLOADING_MESSAGE, e.getLocalizedMessage()));

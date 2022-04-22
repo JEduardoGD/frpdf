@@ -18,7 +18,7 @@ public final class PdfEncryptUtil {
         // no call
     }
 
-    public static void removeWrights(File file, String newFilepath) throws WebsecureException {
+    public static void removeWrights(File file, String ownerPswd, String newFilepath) throws WebsecureException {
         PDDocument document = null;
         try {
             document = PDDocument.load(file);
