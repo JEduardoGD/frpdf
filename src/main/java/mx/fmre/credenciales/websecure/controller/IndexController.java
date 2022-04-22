@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,6 +32,9 @@ import mx.fmre.credenciales.websecure.staticv.StaticValuesUtil;
 public class IndexController {
     @Autowired
     private IPdfSecureService pdfSecureService;
+    
+    @Value("${APP_CONTEXT}")
+    private String appContext;
 
     @GetMapping
     public String showUserList(Model model) {
@@ -43,7 +47,7 @@ public class IndexController {
         attributes.addFlashAttribute(StaticValuesUtil.MESSAGE_VAR, uploadResult.getMessage());
         attributes.addFlashAttribute(StaticValuesUtil.HAY_ERROR_VAR, uploadResult.isHayError());
         attributes.addFlashAttribute(StaticValuesUtil.FILENAME_VAR, uploadResult.getDownloadFilename());
-        return new RedirectView("@{/}", true);
+        return new RedirectView(appContext + StaticValuesUtil.HOME_REDIRECT, true);
     }
 
     @GetMapping(StaticValuesUtil.DOWNLOAD_FILE_REDIRECT)
