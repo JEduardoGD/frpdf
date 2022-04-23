@@ -56,7 +56,7 @@ public final class PdfEncryptUtil {
                 try {
                     document.close();
                 } catch (IOException e) {
-                    log.error(e.getLocalizedMessage());
+                    log.error("{}:{}", e.getCause(), e.getMessage());
                 }
             }
         }

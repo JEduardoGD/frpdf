@@ -31,7 +31,7 @@ public class PdfSecureServiceImpl extends FileUploadsValidator implements IPdfSe
 
     @Value("${UPLOAD_MODIFIED_DIR}")
     private String uploadModifiedDir;
-    
+
     @Value("${PDF_OWNER_PSWD}")
     private String ownerPswd;
 
@@ -57,15 +57,15 @@ public class PdfSecureServiceImpl extends FileUploadsValidator implements IPdfSe
         try {
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            log.error(e.getLocalizedMessage());
-            return new UploadResult(true, String.format(StaticValuesUtil.ERROR_UPLOADING_MESSAGE, e.getLocalizedMessage()));
+            log.error("Error", e);
+            return new UploadResult(true, String.format(StaticValuesUtil.ERROR_UPLOADING_MESSAGE, e.getMessage()));
         }
 
         try {
             PdfEncryptUtil.removeWrights(path.toFile(), ownerPswd, uploadModifiedDir + File.separator + fileName);
         } catch (WebsecureException e) {
-            log.error(e.getLocalizedMessage());
-            return new UploadResult(true, String.format(StaticValuesUtil.ERROR_UPLOADING_MESSAGE, e.getLocalizedMessage()));
+            log.error("Error", e);
+            return new UploadResult(true, String.format(StaticValuesUtil.ERROR_UPLOADING_MESSAGE, e.getMessage()));
         }
 
         return new UploadResult(false, StaticValuesUtil.UPLOAD_SUCCESSFULLY_MESSAGE, fileName);
@@ -75,15 +75,15 @@ public class PdfSecureServiceImpl extends FileUploadsValidator implements IPdfSe
     public UploadResult downloadFile(String filename) {
         String path = uploadModifiedDir + File.separator + filename;
         File file = Paths.get(path).toFile();
-        if(!fileExists(file)) {
+        if (!fileExists(file)) {
             return new UploadResult(true, StaticValuesUtil.FILE_DOES_NOT_EXISTS_MESSAGE);
         }
-        
-        if(!canReadFile(file)) {
+
+        if (!canReadFile(file)) {
             return new UploadResult(true, StaticValuesUtil.CANT_READ_FILE_MESSAGE);
         }
 
         return new UploadResult(false, file);
-        
+
     }
 }
