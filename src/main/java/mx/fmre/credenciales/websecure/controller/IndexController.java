@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import mx.fmre.credenciales.websecure.dto.UploadResult;
 import mx.fmre.credenciales.websecure.service.IPdfSecureService;
@@ -39,12 +37,12 @@ public class IndexController {
     }
 
     @PostMapping(StaticValuesUtil.UPLOAD_FILE_REDIRECT)
-    public RedirectView uploadFile(@RequestParam(StaticValuesUtil.FILE_PARAM) MultipartFile file, RedirectAttributes attributes) {
+    public String uploadFile(@RequestParam(StaticValuesUtil.FILE_PARAM) MultipartFile file, RedirectAttributes attributes) {
         UploadResult uploadResult = pdfSecureService.uploadFile(file);
         attributes.addFlashAttribute(StaticValuesUtil.MESSAGE_VAR, uploadResult.getMessage());
         attributes.addFlashAttribute(StaticValuesUtil.HAY_ERROR_VAR, uploadResult.isHayError());
         attributes.addFlashAttribute(StaticValuesUtil.FILENAME_VAR, uploadResult.getDownloadFilename());
-        return new RedirectView(StaticValuesUtil.HOME_REDIRECT, true);
+        return StaticValuesUtil.HOME_REDIRECT;
     }
 
     @GetMapping(StaticValuesUtil.DOWNLOAD_FILE_REDIRECT)
